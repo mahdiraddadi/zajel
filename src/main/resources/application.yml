@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      database: zajel_db
+      port: 27017
+      host: localhost
+      url: mongodb://localhost:27017/zajel_db
