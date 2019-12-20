@@ -1,6 +1,7 @@
 package com.sweagle.zajel.services.impl;
 
 import com.sweagle.zajel.entities.User;
+import com.sweagle.zajel.exceptions.ResourceAlreadyExistException;
 import com.sweagle.zajel.repositories.UserRepository;
 import com.sweagle.zajel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,17 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User addUser(User user) {
-        return userRepository.save(user);
+    public User addUser(User user) throws ResourceAlreadyExistException {
+        if (userRepository.existsByEmailOrUsername(user.getEmail(), user.getUsername())) {
+            throw new ResourceAlreadyExistException("User is already exist");
+        } else {
+            return userRepository.save(user);
+        }
     }
 
-    public User getUserByEmailOrUsername(String emailOrUsername){
-        return userRepository.findByEmailOrUsername(emailOrUsername);
+    @Override
+    public List<User> getUserByEmailOrUsername(User user){
+        return userRepository.findByEmailOrUsername(user.getEmail(), user.getUsername());
     }
 
     @Override
@@ -35,9 +41,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser() {
-
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
     }
-
 
 }

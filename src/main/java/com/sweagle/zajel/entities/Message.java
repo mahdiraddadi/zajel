@@ -3,7 +3,7 @@ package com.sweagle.zajel.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Document
 public class Message {
@@ -12,10 +12,10 @@ public class Message {
     private String id;
 
     private User sender;
-    private User reciever;
+    private User receiver;
     private String subject;
     private String content;
-    private Date date;
+    private LocalDateTime date;
 
     public String getId() {
         return id;
@@ -31,14 +31,6 @@ public class Message {
 
     public void setSender(User sender) {
         this.sender = sender;
-    }
-
-    public User getReciever() {
-        return reciever;
-    }
-
-    public void setReciever(User reciever) {
-        this.reciever = reciever;
     }
 
     public String getSubject() {
@@ -57,11 +49,19 @@ public class Message {
         this.content = content;
     }
 
-    public Date getDate() {
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }
