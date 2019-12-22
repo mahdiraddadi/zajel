@@ -20,8 +20,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
 
     private static Logger logger = LoggerFactory.getLogger(RestResponseExceptionHandler.class);
 
-    @ExceptionHandler(value
-            = { ResourceNotFoundException.class})
+    @ExceptionHandler(value = ResourceNotFoundException.class)
     public ResponseEntity<?> resourceNotFoundException(Exception ex, WebRequest request) {
         logger.error(ex.getMessage());
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.toString(), ex.getMessage(), request.getDescription(false));
@@ -29,8 +28,7 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value
-            = { ResourceAlreadyExistException.class})
+    @ExceptionHandler(value = ResourceAlreadyExistException.class)
     public ResponseEntity<?> resourceAlreadyExistException(Exception ex, WebRequest request) {
         logger.error(ex.getMessage());
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.toString(), ex.getMessage(), request.getDescription(false));

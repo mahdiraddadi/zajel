@@ -2,11 +2,13 @@ package com.sweagle.zajel.services.impl;
 
 import com.sweagle.zajel.entities.User;
 import com.sweagle.zajel.exceptions.ResourceAlreadyExistException;
+import com.sweagle.zajel.exceptions.ResourceNotFoundException;
 import com.sweagle.zajel.repositories.UserRepository;
 import com.sweagle.zajel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +33,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(String id) {
-        return userRepository.findById(id);
+    public User getUserById(String id) throws ResourceNotFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User is not available with the provided id"));
     }
 
     @Override

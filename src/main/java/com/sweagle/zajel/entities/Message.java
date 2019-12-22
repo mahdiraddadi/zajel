@@ -1,5 +1,6 @@
 package com.sweagle.zajel.entities;
 
+import com.sweagle.zajel.payloads.MessageRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +17,17 @@ public class Message {
     private String subject;
     private String content;
     private LocalDateTime date;
+
+    public Message() {
+    }
+
+    public Message(MessageRequest messageRequest) {
+        this.subject = messageRequest.getSubject();
+        this.content = messageRequest.getContent();
+        this.date = LocalDateTime.now();
+    }
+
+
 
     public String getId() {
         return id;

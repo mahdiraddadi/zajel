@@ -20,7 +20,7 @@ public class UserRestController {
 
     @PutMapping
     public ResponseEntity<User> saveUser(@RequestBody User user) throws ResourceAlreadyExistException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
     }
 
     @PostMapping
@@ -30,9 +30,7 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") String id) throws ResourceNotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                userService.getUserById(id)
-                           .orElseThrow(() -> new ResourceNotFoundException("User is not available with the provided id")));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 
     @GetMapping
@@ -41,7 +39,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

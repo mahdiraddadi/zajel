@@ -1,8 +1,10 @@
 package com.sweagle.zajel.controllers;
 
-import com.sweagle.zajel.entities.User;
-import com.sweagle.zajel.exceptions.ResourceAlreadyExistException;
+import com.sweagle.zajel.entities.Message;
 import com.sweagle.zajel.exceptions.ResourceNotFoundException;
+import com.sweagle.zajel.payloads.MessageRequest;
+import com.sweagle.zajel.payloads.MessageResponse;
+import com.sweagle.zajel.services.MessageService;
 import com.sweagle.zajel.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,37 +14,44 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("messages")
+@RequestMapping("api/messages")
 public class MessageRestController {
 
     @Autowired
     UserService userService;
 
-    @PutMapping
-    public ResponseEntity<User> saveUser(@RequestBody User user) throws ResourceAlreadyExistException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.addUser(user));
+    @Autowired
+    MessageService messageService;
+
+    @PostMapping("/send")
+    public ResponseEntity<Message> sendMessage(@RequestBody MessageRequest message) throws ResourceNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.send(message));
     }
 
-    @PostMapping
-    public ResponseEntity<List<User>> getUser(@RequestBody User user){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByEmailOrUsername(user));
+
+    @GetMapping("/sent/{senderId}")
+    public ResponseEntity<List<MessageResponse>> getSentMessages(@PathVariable("senderId") String id) throws ResourceNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.getSentMessages(id));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") String id) throws ResourceNotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                userService.getUserById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("User is not available with the provided id")));
+    @GetMapping("/incoming/{receiverId}")
+    public ResponseEntity<List<MessageResponse>> getIncomingMessages(@PathVariable("receiverId") String id) throws ResourceNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.getIncomingMessages(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getUsers(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
+    @GetMapping("/{messageId}")
+    public ResponseEntity<MessageResponse> getMessage(@PathVariable("messageId") String id) throws ResourceNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.getMessageById(id));
+    }
+
+    @GetMapping("/{messageId}/details")
+    public ResponseEntity<Message> getMessageDetails(@PathVariable("messageId") String id) throws ResourceNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.getMessageDetailsById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Object> deleteMessage(@PathVariable("id") String id) {
+        messageService.deleteMessage(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
