@@ -11,6 +11,8 @@ import com.sweagle.zajel.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -65,5 +67,19 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteMessage(String messageId) {
         messageRepository.deleteById(messageId);
+    }
+
+    @Override
+    public Integer countMessagesWillBeSentInDay() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = now.withHour(23).withMinute(59).withSecond(59);
+        return messageRepository.countBySendingDateBetween(now, endOfDay);
+    }
+
+    @Override
+    public Integer countMessagesWillBeSentInWeek() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfWeek= now.with(DayOfWeek.SUNDAY).withHour(23).withMinute(59).withSecond(59);
+        return messageRepository.countBySendingDateBetween(now, endOfWeek);
     }
 }

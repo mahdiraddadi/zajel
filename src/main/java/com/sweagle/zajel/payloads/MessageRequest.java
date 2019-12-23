@@ -8,6 +8,7 @@ public class MessageRequest {
     private String receiver;
     private String subject;
     private String content;
+    private LocalDateTime sendingDate;
 
     public String getSender() {
         return sender;
@@ -41,4 +42,11 @@ public class MessageRequest {
         this.content = content;
     }
 
+    public LocalDateTime getSendingDate() {
+        return sendingDate;
+    }
+
+    public void setSendingDate(LocalDateTime sendingDate) {
+        this.sendingDate = sendingDate;
+    }
 }

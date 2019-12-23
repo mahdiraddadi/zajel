@@ -55,4 +55,13 @@ public class MessageRestController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @GetMapping("/countMessagesInRestOfDay")
+    public ResponseEntity<Integer> countMessagesInRestOfDay() {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.countMessagesWillBeSentInDay());
+    }
+
+    @GetMapping("/countMessagesInRestOfWeek")
+    public ResponseEntity<Integer> countMessagesInRestOfWeek() {
+        return ResponseEntity.status(HttpStatus.OK).body(messageService.countMessagesWillBeSentInWeek());
+    }
 }

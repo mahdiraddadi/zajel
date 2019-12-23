@@ -1,5 +1,7 @@
 package com.sweagle.zajel.controllers;
 
+import com.sweagle.zajel.TestMongoConfig;
+import com.sweagle.zajel.ZajelApplication;
 import com.sweagle.zajel.configurations.RestResponseExceptionHandler;
 import com.sweagle.zajel.entities.User;
 import com.sweagle.zajel.exceptions.ResourceAlreadyExistException;
@@ -35,7 +37,10 @@ import static org.hamcrest.Matchers.is;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(classes = {
+        ZajelApplication.class,
+        TestMongoConfig.class
+})
 public class UserRestControllerTest {
 
     @Autowired
@@ -54,11 +59,11 @@ public class UserRestControllerTest {
             "    }";
 
     @BeforeEach
-    public void setup() {
+    void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(userRestController)
-                                      .setControllerAdvice(new RestResponseExceptionHandler())
-                                      .build();
+                .setControllerAdvice(new RestResponseExceptionHandler())
+                .build();
     }
 
     @Test

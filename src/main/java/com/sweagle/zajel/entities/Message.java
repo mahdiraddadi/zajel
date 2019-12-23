@@ -2,6 +2,7 @@ package com.sweagle.zajel.entities;
 
 import com.sweagle.zajel.payloads.MessageRequest;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -12,11 +13,16 @@ public class Message {
     @Id
     private String id;
 
+    @DBRef
     private User sender;
+
+    @DBRef
     private User receiver;
+
     private String subject;
     private String content;
     private LocalDateTime date;
+    private LocalDateTime sendingDate;
 
     public Message() {
     }
@@ -24,7 +30,12 @@ public class Message {
     public Message(MessageRequest messageRequest) {
         this.subject = messageRequest.getSubject();
         this.content = messageRequest.getContent();
-        this.date = LocalDateTime.now();
+        if (messageRequest.getSendingDate() != null) {
+            this.sendingDate = messageRequest.getSendingDate();
+            this.date = messageRequest.getSendingDate();
+        } else {
+            this.date = LocalDateTime.now();
+        }
     }
 
 
@@ -75,5 +86,13 @@ public class Message {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public LocalDateTime getSendingDate() {
+        return sendingDate;
+    }
+
+    public void setSendingDate(LocalDateTime sendingDate) {
+        this.sendingDate = sendingDate;
     }
 }

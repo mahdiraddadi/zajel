@@ -15,4 +15,6 @@ public interface MessageService {
     MessageResponse getMessageById(String messageId) throws ResourceNotFoundException;
     Message getMessageDetailsById(String messageId) throws ResourceNotFoundException;
     void deleteMessage(String messageId);
+    Integer countMessagesWillBeSentInDay();
+    Integer countMessagesWillBeSentInWeek();
 }

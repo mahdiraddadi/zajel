@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -272,8 +272,7 @@ public class MessageRestControllerTest {
         messageResponse.setReceiver(receiver);
         messageResponse.setSender(sender);
         messageResponse.setSubject("Hello");
-        List<MessageResponse> messageResponseList = new ArrayList<>();
-        messageResponseList.add(messageResponse);
+        List<MessageResponse> messageResponseList = Arrays.asList(messageResponse);
 
         when(messageService.getIncomingMessages(anyString())).thenReturn(messageResponseList);
 
@@ -313,8 +312,7 @@ public class MessageRestControllerTest {
         messageResponse.setReceiver(receiver);
         messageResponse.setSender(sender);
         messageResponse.setSubject("Hello");
-        List<MessageResponse> messageResponseList = new ArrayList<>();
-        messageResponseList.add(messageResponse);
+        List<MessageResponse> messageResponseList = Arrays.asList(messageResponse);
 
         when(messageService.getSentMessages(anyString())).thenReturn(messageResponseList);
 
@@ -362,5 +360,37 @@ public class MessageRestControllerTest {
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is("Message is not found")));
+    }
+
+    @Test
+    void countMessagesWillBeSentInDay() throws Exception {
+
+        when(messageService.countMessagesWillBeSentInDay()).thenReturn(5);
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/api/messages/countMessagesInRestOfDay")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8");
+
+        mockMvc.perform(builder
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(5)));
+    }
+
+    @Test
+    void countMessagesInRestOfWeek() throws Exception{
+
+        when(messageService.countMessagesWillBeSentInWeek()).thenReturn(36);
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/api/messages/countMessagesInRestOfWeek")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8");
+
+        mockMvc.perform(builder
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(36)));
     }
 }
